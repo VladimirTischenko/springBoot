@@ -13,6 +13,8 @@ public class User {
     private Integer id;
 
     private String name;
+
+    @Column(updatable = false, nullable = false, unique=true)
     private String email;
 
     public User() {
