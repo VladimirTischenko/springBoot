@@ -34,4 +34,9 @@ public class UserController {
         // This returns a JSON or XML with the users
         return userRepository.findAll();
     }
+
+    @GetMapping()
+    public String root() {
+        return "loginSuccess";
+    }
 }
