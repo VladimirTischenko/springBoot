@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Map;
+
 /**
  * Created by Vladimir on 20.04.2020.
  */
@@ -21,14 +23,6 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    @PostMapping // Map ONLY POST Requests
-    public @ResponseBody User addNewUser (@RequestParam String name, @RequestParam String email) {
-        // @RequestParam means it is a parameter from the GET or POST request
-
-        User user = new User(name, email);
-        return userRepository.save(user);
-    }
-
     @GetMapping(path="/allUsers")
     public @ResponseBody Iterable<User> getAllUsers() {
         // This returns a JSON or XML with the users
@@ -38,5 +32,23 @@ public class UserController {
     @GetMapping()
     public String root() {
         return "loginSuccess";
+    }
+
+    @GetMapping(path="/registration")
+    public String registration() {
+        return "registration";
+    }
+
+    @PostMapping(path="/registration")
+    public String addNewUser (User user, Map<String, Object> model) {
+        User userByName = userRepository.findByName(user.getName());
+
+        if(userByName != null) {
+            model.put("message", "User already exist!");
+            return "registration";
+        }
+
+        userRepository.save(user);
+        return "redirect:/login";
     }
 }

@@ -13,16 +13,12 @@ public class User {
     private Integer id;
 
     private String name;
+    private String password;
 
     @Column(updatable = false, nullable = false, unique=true)
     private String email;
 
     public User() {
-    }
-
-    User(String name, String email) {
-        this.name = name;
-        this.email = email;
     }
 
     public Integer getId() {
@@ -47,5 +43,13 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
