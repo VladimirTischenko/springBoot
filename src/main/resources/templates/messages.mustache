@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Login success page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+    <div>
+        <form method="post">
+            <input type="text" name="text" placeholder="Введите сообщение" />
+            <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
+            <button type="submit">Добавить</button>
+        </form>
+    </div>
+
+    <br>
+    <div>Список сообщений</div>
+    {{#messages}}
+        <div>
+            <b>{{id}}</b>
+            <span>{{text}}</span>
+        </div>
+    {{/messages}}
+</body>
+</html>

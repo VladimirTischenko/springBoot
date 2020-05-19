@@ -1,6 +1,7 @@
-package springBoot;
+package springBoot.repository;
 
 import org.springframework.data.repository.CrudRepository;
+import springBoot.domain.User;
 
 /**
  * Created by Vladimir on 21.04.2020.

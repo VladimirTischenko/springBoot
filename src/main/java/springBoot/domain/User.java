@@ -1,4 +1,4 @@
-package springBoot;
+package springBoot.domain;
 
 import javax.persistence.*;
 import java.util.Collections;

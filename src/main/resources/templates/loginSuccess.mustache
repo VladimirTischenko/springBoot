@@ -5,7 +5,13 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
-    <div>Login success!</div><br>
+    <div>Login success!</div>
+
+    <br>
+    <a href="/messages">Messages</a>
+
+    <br>
+    <br>
     <form action="/logout" method="post">
         <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
         <div><input type="submit" value="Sign Out"/></div>
