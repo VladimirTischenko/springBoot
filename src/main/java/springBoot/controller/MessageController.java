@@ -1,10 +1,12 @@
 package springBoot.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import springBoot.domain.Message;
+import springBoot.domain.User;
 import springBoot.repository.MessageRepository;
 
 import java.util.Map;
@@ -29,7 +31,12 @@ public class MessageController {
     }
 
     @PostMapping(path="/messages")
-    public String addNewMessage(Message message, Map<String, Object> model) {
+    public String addNewMessage(
+            @AuthenticationPrincipal User user,
+            Message message,
+            Map<String, Object> model
+    ) {
+        message.setAuthor(user);
         messageRepository.save(message);
         return getMessages(model);
     }
