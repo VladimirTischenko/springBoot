@@ -5,6 +5,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import springBoot.domain.Message;
 import springBoot.domain.User;
 import springBoot.repository.MessageRepository;
@@ -15,7 +16,9 @@ import java.util.Map;
  * Created by Vladimir on 18.05.2020.
  */
 @Controller
+@RequestMapping(MessageController.REST_URL)
 public class MessageController {
+    static final String REST_URL = "/messages";
     private final MessageRepository messageRepository;
 
     @Autowired
@@ -23,14 +26,14 @@ public class MessageController {
         this.messageRepository = messageRepository;
     }
 
-    @GetMapping(path="/messages")
+    @GetMapping()
     public String getMessages(Map<String, Object> model) {
         Iterable<Message> messages = messageRepository.findAll();
         model.put("messages", messages);
         return "messages";
     }
 
-    @PostMapping(path="/messages")
+    @PostMapping()
     public String addNewMessage(
             @AuthenticationPrincipal User user,
             Message message,
