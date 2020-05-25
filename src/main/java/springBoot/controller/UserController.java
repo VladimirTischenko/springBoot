@@ -1,6 +1,7 @@
 package springBoot.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import springBoot.domain.User;
 import springBoot.repository.UserRepository;
@@ -10,6 +11,7 @@ import springBoot.repository.UserRepository;
  */
 @RestController
 @RequestMapping(UserController.REST_URL)
+@PreAuthorize("hasAuthority('ADMIN')")
 public class UserController {
     static final String REST_URL = "/users";
 
