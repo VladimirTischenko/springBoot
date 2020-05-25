@@ -8,4 +8,5 @@ import springBoot.domain.User;
  */
 public interface UserRepository extends CrudRepository<User, Integer> {
     User findByName(String name);
+    User findById(int id);
 }
