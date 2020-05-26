@@ -6,9 +6,9 @@
 </head>
 <body>
     <div>
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             <input type="text" name="text" placeholder="Введите сообщение" />
-            <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
+            <input type="file" name="file">
             <button type="submit">Добавить</button>
         </form>
     </div>
@@ -20,6 +20,9 @@
             <b>{{id}}</b>
             <span>{{text}}</span>
             <strong>{{author}}</strong>
+            {{#filename}}
+                <img src="/e:/java/projects/springBoot/uploads/{{filename}}">
+            {{/filename}}
         </div>
     {{/messages}}
 </body>
