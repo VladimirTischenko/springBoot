@@ -29,7 +29,21 @@ public class UserService implements UserDetailsService{
         return userRepository.findByName(s);
     }
 
-    public boolean addUser(User user) {
+    public Iterable<User> getAll() {
+        return userRepository.findAll();
+    }
+
+    public User get(int id) {
+        return userRepository.findById(id);
+    }
+
+    public User update(User user, User updatedUser) {
+        user.setName(updatedUser.getName());
+        user.setRoles(updatedUser.getRoles());
+        return userRepository.save(user);
+    }
+
+    public boolean add(User user) {
         User userByName = userRepository.findByEmail(user.getEmail());
 
         if (userByName != null) {
@@ -47,7 +61,7 @@ public class UserService implements UserDetailsService{
         return true;
     }
 
-    public boolean activateUser(String code) {
+    public boolean activate(String code) {
         User user = userRepository.findByActivationCode(code);
 
         if (user == null) {

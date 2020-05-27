@@ -30,7 +30,7 @@ public class RegistrationController {
 
     @PostMapping("/registration")
     public String addUser(User user, Map<String, Object> model) {
-        boolean b = userService.addUser(user);
+        boolean b = userService.add(user);
 
         if (!b) {
             model.put("message", "User already exist!");
@@ -42,7 +42,7 @@ public class RegistrationController {
 
     @GetMapping("/mailConfirmation/{code}")
     public String mailConfirmation(@PathVariable String code, Model model) {
-        boolean isActivate = userService.activateUser(code);
+        boolean isActivate = userService.activate(code);
 
         if (isActivate) {
             model.addAttribute("message", "User successfully activated");
