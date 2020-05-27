@@ -20,10 +20,12 @@ public class User implements UserDetails{
 
     private String name;
     private String password;
-    private boolean enabled = true;
+    private boolean enabled = false;
 
     @Column(updatable = false, nullable = false, unique=true)
     private String email;
+
+    private String activationCode;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "roles", joinColumns = @JoinColumn(name = "user_id"))
@@ -109,5 +111,13 @@ public class User implements UserDetails{
     @Override
     public String toString() {
         return getName();
+    }
+
+    public String getActivationCode() {
+        return activationCode;
+    }
+
+    public void setActivationCode(String activationCode) {
+        this.activationCode = activationCode;
     }
 }

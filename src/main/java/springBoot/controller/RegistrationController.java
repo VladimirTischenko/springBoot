@@ -2,11 +2,12 @@ package springBoot.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import springBoot.domain.User;
-import springBoot.repository.UserRepository;
+import springBoot.service.UserService;
 
 import java.util.Map;
 
@@ -14,32 +15,41 @@ import java.util.Map;
  * Created by Vladimir on 22.05.2020.
  */
 @Controller
-@RequestMapping(RegistrationController.REST_URL)
 public class RegistrationController {
-    static final String REST_URL = "/registration";
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Autowired
-    public RegistrationController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public RegistrationController(UserService userService) {
+        this.userService = userService;
     }
 
-    @GetMapping()
+    @GetMapping("/registration")
     public String registration() {
         return "registration";
     }
 
-    @PostMapping()
-    public String addNewUser (User user, Map<String, Object> model) {
-        User userByName = userRepository.findByName(user.getName());
+    @PostMapping("/registration")
+    public String addUser(User user, Map<String, Object> model) {
+        boolean b = userService.addUser(user);
 
-        if(userByName != null) {
+        if (!b) {
             model.put("message", "User already exist!");
             return "registration";
         }
 
-        userRepository.save(user);
         return "redirect:/login";
     }
 
+    @GetMapping("/mailConfirmation/{code}")
+    public String mailConfirmation(@PathVariable String code, Model model) {
+        boolean isActivate = userService.activateUser(code);
+
+        if (isActivate) {
+            model.addAttribute("message", "User successfully activated");
+        } else {
+            model.addAttribute("message", "Activation code not found");
+        }
+
+        return "login";
+    }
 }

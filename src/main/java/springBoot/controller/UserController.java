@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User getUserForEdit(@PathVariable int id) {
+    public User getUser(@PathVariable int id) {
         return userRepository.findById(id);
     }
 
