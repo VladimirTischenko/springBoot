@@ -40,6 +40,7 @@ public class UserService implements UserDetailsService{
     public User update(User user, User updatedUser) {
         user.setName(updatedUser.getName());
         user.setRoles(updatedUser.getRoles());
+        user.setPassword(updatedUser.getPassword());
         return userRepository.save(user);
     }
 
