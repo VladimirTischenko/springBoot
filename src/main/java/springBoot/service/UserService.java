@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import springBoot.domain.User;
 import springBoot.repository.UserRepository;
@@ -17,11 +18,13 @@ import java.util.UUID;
 public class UserService implements UserDetailsService{
     private final UserRepository userRepository;
     private final MailSenderService senderService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, MailSenderService senderService) {
+    public UserService(UserRepository userRepository, MailSenderService senderService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.senderService = senderService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -40,7 +43,7 @@ public class UserService implements UserDetailsService{
     public User update(User user, User updatedUser) {
         user.setName(updatedUser.getName());
         user.setRoles(updatedUser.getRoles());
-        user.setPassword(updatedUser.getPassword());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -53,6 +56,7 @@ public class UserService implements UserDetailsService{
 
         String activationCode = UUID.randomUUID().toString();
         user.setActivationCode(activationCode);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
 
         String text = "Hello, " + user.getName() + "!\n" +
