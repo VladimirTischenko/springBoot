@@ -1,6 +1,9 @@
 package springBoot.domain;
 
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 /**
  * Created by Vladimir on 18.05.2020.
@@ -12,6 +15,8 @@ public class Message {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
 
+    @NotBlank(message = "Fill the message")
+    @Length(max = 2048, message = "Message too long (more than 2 kB)")
     private String text;
 
     @ManyToOne(fetch = FetchType.EAGER)

@@ -7,14 +7,23 @@
 <body>
     <div>Registration page</div><br>
 
-    {{#message}}
-        {{message}}
-    {{/message}}
+    {{#userAlreadyExistError}}
+        {{userAlreadyExistError}}
+    {{/userAlreadyExistError}}
 
     <form action="/registration" method="post">
-        <div><label> User Name : <input type="text" name="name"/> </label></div>
-        <div><label> Email : <input type="text" name="email"/> </label></div>
+        <div><label> User Name : <input type="text" name="name" value="{{#user.name}}{{user.name}}{{/user.name}}"/> </label></div>
+        {{#nameError}}
+            {{nameError}}
+        {{/nameError}}
+        <div><label> Email : <input type="text" name="email" value="{{#user.email}}{{user.email}}{{/user.email}}"/> </label></div>
+        {{#emailError}}
+            {{emailError}}
+        {{/emailError}}
         <div><label> Password: <input type="password" name="password"/> </label></div>
+        {{#passwordError}}
+            {{passwordError}}
+        {{/passwordError}}
         <div><input type="submit" value="Registration"/></div>
     </form>
 </body>

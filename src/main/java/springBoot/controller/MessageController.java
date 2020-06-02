@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import springBoot.domain.Message;
 import springBoot.domain.User;
 import springBoot.repository.MessageRepository;
 
+import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
@@ -45,28 +47,35 @@ public class MessageController {
     @PostMapping()
     public String addNewMessage(
             @AuthenticationPrincipal User user,
-            Message message,
+            @Valid Message message,
+            BindingResult bindingResult,
             Map<String, Object> model,
             @RequestParam("file") MultipartFile file
     ) throws IOException {
 
-        if(file != null) {
-            File uploadDir = new File(uploadPath);
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = ControllerUtil.getErrors(bindingResult);
+            model.put("errors", errors);
+        } else {
+            if (file.getOriginalFilename() != null && !file.getOriginalFilename().isEmpty()) {
+                File uploadDir = new File(uploadPath);
 
-            if (!uploadDir.exists()) {
-                uploadDir.mkdir();
+                if (!uploadDir.exists()) {
+                    uploadDir.mkdir();
+                }
+
+                String uuidFilename = UUID.randomUUID().toString();
+                String resultFilename = uuidFilename + "." + file.getOriginalFilename();
+
+                file.transferTo(new File(uploadPath + "/" + resultFilename));
+
+                message.setFilename(resultFilename);
             }
 
-            String uuidFilename = UUID.randomUUID().toString();
-            String resultFilename = uuidFilename + "." + file.getOriginalFilename();
-
-            file.transferTo(new File(uploadPath + "/" + resultFilename));
-
-            message.setFilename(resultFilename);
+            message.setAuthor(user);
+            messageRepository.save(message);
         }
 
-        message.setAuthor(user);
-        messageRepository.save(message);
         return getMessages(model);
     }
 }
