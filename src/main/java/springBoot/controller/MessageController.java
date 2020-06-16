@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import springBoot.domain.Message;
 import springBoot.domain.User;
@@ -18,6 +15,7 @@ import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -38,8 +36,15 @@ public class MessageController {
     }
 
     @GetMapping()
-    public String getMessages(Map<String, Object> model) {
+    public String getAllMessages(Map<String, Object> model) {
         Iterable<Message> messages = messageRepository.findAll();
+        model.put("messages", messages);
+        return "messages";
+    }
+
+    @GetMapping("/{id}")
+    public String getMessages(@PathVariable("id") User user, Map<String, Object> model) {
+        Set<Message> messages = user.getMessages();
         model.put("messages", messages);
         return "messages";
     }
@@ -76,6 +81,6 @@ public class MessageController {
             messageRepository.save(message);
         }
 
-        return getMessages(model);
+        return getAllMessages(model);
     }
 }
