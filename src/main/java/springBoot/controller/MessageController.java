@@ -3,7 +3,7 @@ package springBoot.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,7 +21,7 @@ import java.util.UUID;
 /**
  * Created by Vladimir on 18.05.2020.
  */
-@Controller
+@RestController
 @RequestMapping(MessageController.REST_URL)
 public class MessageController {
     static final String REST_URL = "/messages";
@@ -82,5 +82,21 @@ public class MessageController {
         }
 
         return getAllMessages(model);
+    }
+
+    @PostMapping("/{id}")
+    public Message updateMessage(
+            @AuthenticationPrincipal User user,
+            @PathVariable("id") Message message,
+            @RequestBody Message updatedMessage
+    ) {
+        if (user.equals(message.getAuthor())) {
+            String text = updatedMessage.getText();
+            if (!StringUtils.isEmpty(text)) {
+                message.setText(text);
+                messageRepository.save(message);
+            }
+        }
+        return message;
     }
 }
