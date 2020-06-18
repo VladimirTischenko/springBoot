@@ -43,7 +43,7 @@ public class MessageController {
     }
 
     @GetMapping("/{id}")
-    public String getMessages(@PathVariable("id") User user, Map<String, Object> model) {
+    public String getUserMessages(@PathVariable("id") User user, Map<String, Object> model) {
         Set<Message> messages = user.getMessages();
         model.put("messages", messages);
         return "messages";
