@@ -2,6 +2,7 @@ package springBoot.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
@@ -23,6 +24,7 @@ import java.util.UUID;
  */
 @RestController
 @RequestMapping(MessageController.REST_URL)
+@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
 public class MessageController {
     static final String REST_URL = "/messages";
     private final MessageRepository messageRepository;
@@ -36,10 +38,10 @@ public class MessageController {
     }
 
     @GetMapping()
-    public String getAllMessages(Map<String, Object> model) {
+    public Iterable<Message> getAllMessages(Map<String, Object> model) {
         Iterable<Message> messages = messageRepository.findAll();
         model.put("messages", messages);
-        return "messages";
+        return messages;
     }
 
     @GetMapping("/{id}")
@@ -50,7 +52,7 @@ public class MessageController {
     }
 
     @PostMapping()
-    public String addNewMessage(
+    public Iterable<Message> addNewMessage(
             @AuthenticationPrincipal User user,
             @Valid Message message,
             BindingResult bindingResult,
