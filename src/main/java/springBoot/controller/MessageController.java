@@ -2,6 +2,10 @@ package springBoot.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.StringUtils;
@@ -38,10 +42,13 @@ public class MessageController {
     }
 
     @GetMapping()
-    public Iterable<Message> getAllMessages(Map<String, Object> model) {
-        Iterable<Message> messages = messageRepository.findAll();
-        model.put("messages", messages);
-        return messages;
+    public Iterable<Message> getAllMessages(
+            Map<String, Object> model,
+            @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        Page<Message> page = messageRepository.findAll(pageable);
+        model.put("page", page);
+        return page;
     }
 
     @GetMapping("/{id}")
@@ -57,7 +64,8 @@ public class MessageController {
             @Valid Message message,
             BindingResult bindingResult,
             Map<String, Object> model,
-            @RequestParam("file") MultipartFile file
+            @RequestParam("file") MultipartFile file,
+            @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable
     ) throws IOException {
 
         if (bindingResult.hasErrors()) {
@@ -83,7 +91,7 @@ public class MessageController {
             messageRepository.save(message);
         }
 
-        return getAllMessages(model);
+        return getAllMessages(model, pageable);
     }
 
     @PostMapping("/{id}")

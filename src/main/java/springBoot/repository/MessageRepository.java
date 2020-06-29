@@ -1,5 +1,7 @@
 package springBoot.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import springBoot.domain.Message;
@@ -9,4 +11,5 @@ import springBoot.domain.Message;
  */
 @Repository
 public interface MessageRepository extends CrudRepository<Message, Integer> {
+    Page<Message> findAll(Pageable pageable);
 }
